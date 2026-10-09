@@ -1,0 +1,32 @@
+﻿WBS_ID;Area;Attività;Riferimenti;Priorità;Stato;Dipendenze;Criterio di completamento
+WBS-001;Governance;Consolidare baseline requisiti e decisioni;"00-DECISIONS.md; 01-VISION.md; 02-REQUIREMENTS.md";P0;Da fare;;Baseline approvata
+WBS-002;Analisi;Definire e documentare i flussi di reso, annullamento e storno fidelity;"02-REQUIREMENTS.md; 06-DATA-MODEL.md";P0;Da fare;WBS-001;Casi di reso totale/parziale e storno approvati e tracciabili
+WBS-003;Analisi;Implementare la formula punti locali e le regole di arrotondamento approvate;"00-DECISIONS.md; 02-REQUIREMENTS.md; 06-DATA-MODEL.md";P0;Da fare;WBS-001;"Test: €12,49→12 punti; €12,50→13; €99,60→100; totale acquisto arrotondato una sola volta"
+WBS-004;Analisi;Definire flussi di certificazione acquisto per ogni metodo;"02-REQUIREMENTS.md; 04-FUNCTIONAL-MODULES.md";P0;Da fare;WBS-001;Flussi e stati approvati
+WBS-005;Analisi;Definire ambito delle membership cross-business e deleghe;"03-ROLES-PERMISSIONS.md; 06-DATA-MODEL.md";P0;Da fare;WBS-001;Matrice permessi approvata
+WBS-006;UX/UI;Disegnare journey PWA visitatore, utente e referente attività;"01-VISION.md; 02-REQUIREMENTS.md";P0;Da fare;WBS-001;Wireframe mobile-first approvati
+WBS-007;UX/UI;Progettare dashboard attività multi-sede;"03-ROLES-PERMISSIONS.md; 04-FUNCTIONAL-MODULES.md";P0;Da fare;"WBS-005; WBS-006";Prototipo con selezione attività/sede
+WBS-008;Architettura;Definire architettura applicativa e API;"04-FUNCTIONAL-MODULES.md; 02-REQUIREMENTS.md";P0;Da fare;"WBS-002; WBS-003; WBS-004; WBS-005";Decisioni architetturali documentate
+WBS-009;Dati;Definire schema fisico PostgreSQL e migrazioni SQL numerate;"06-DATA-MODEL.md; 07-DATABASE-ARCHITECTURE.md; migrations/README.md";P0;In revisione;WBS-008;"Schema e 5 migrazioni redatti; esecuzione su PostgreSQL di test superata e vincoli verificati"
+WBS-010;Sicurezza;Implementare identity, ruoli e membership;03-ROLES-PERMISSIONS.md;P0;Da fare;WBS-009;Test accesso cross-tenant superati
+WBS-011;Core attività;Implementare attività e sedi multi-sede;"04-FUNCTIONAL-MODULES.md; 06-DATA-MODEL.md";P0;Da fare;WBS-010;CRUD attività/sedi e controlli autorizzativi
+WBS-012;Vetrina;Implementare vetrina pubblica e contenuti riservati;"02-REQUIREMENTS.md; 04-FUNCTIONAL-MODULES.md";P0;Da fare;WBS-011;Visitatori e utenti vedono solo contenuti consentiti
+WBS-013;Geolocalizzazione;Implementare ricerca e mappa;"02-REQUIREMENTS.md; 04-FUNCTIONAL-MODULES.md";P0;Da fare;WBS-011;Ricerca geografica e marker funzionanti
+WBS-014;Offerte;Implementare offerte, assegnazione personale e riscatto;"02-REQUIREMENTS.md; 06-DATA-MODEL.md";P0;Da fare;"WBS-010; WBS-011";Offerta personale validata e anti-doppio-riscatto
+WBS-015;Fidelity;Implementare ledger e fidelity locale con arrotondamento approvato;"00-DECISIONS.md; 02-REQUIREMENTS.md; 06-DATA-MODEL.md; migrations/003_purchase_loyalty_ledger.sql";P0;Da fare;"WBS-002; WBS-003; WBS-009";"Movimenti idempotenti; saldo locale condiviso tra sedi; formula punti coperta da test"
+WBS-016;Fidelity;Implementare accredito fidelity globale aggiuntivo parametrico e troncamento delle frazioni;"00-DECISIONS.md; 02-REQUIREMENTS.md; 06-DATA-MODEL.md; 07-DATABASE-ARCHITECTURE.md";P0;Da fare;WBS-015;"100 punti locali al 10% generano 10 punti globali; 15 punti al 10% generano 1 punto globale"
+WBS-017;Acquisti;Implementare primo metodo certificazione acquisto end-to-end;"02-REQUIREMENTS.md; 04-FUNCTIONAL-MODULES.md";P0;Da fare;"WBS-015; WBS-016";Acquisto verificato genera accrediti una sola volta
+WBS-018;QR;Implementare generazione, lettura e validazione QR;"02-REQUIREMENTS.md; 04-FUNCTIONAL-MODULES.md";P0;Da fare;"WBS-014; WBS-015";QR sensibili validati server-side e protetti da replay
+WBS-019;Campagne;Implementare campagne e target per attività/sedi;"04-FUNCTIONAL-MODULES.md; 05-BUSINESS-MODEL.md";P0;Da fare;"WBS-014; WBS-018";Campagna pubblicabile su tutte o alcune sedi
+WBS-020;Comunicazioni;Implementare notifiche email;"02-REQUIREMENTS.md; 04-FUNCTIONAL-MODULES.md";P0;Da fare;WBS-019;Invio e stato consegna registrati
+WBS-021;Comunicazioni;Implementare push PWA e gestione subscription;"02-REQUIREMENTS.md; 04-FUNCTIONAL-MODULES.md";P0;Da fare;"WBS-006; WBS-019";Push funzionanti nei browser/dispositivi supportati
+WBS-022;PWA;Implementare manifest, service worker, installazione e cache;02-REQUIREMENTS.md;P0;Da fare;"WBS-006; WBS-008";PWA installabile e testata su dispositivi target
+WBS-023;Commerciale;Implementare piani, abbonamenti mensili e pacchetti multi-mese;"05-BUSINESS-MODEL.md; 06-DATA-MODEL.md";P0;Da fare;WBS-009;Durate, limiti e stato abbonamento verificabili
+WBS-024;Pagamenti;Integrare pagamento abbonamento attività;"02-REQUIREMENTS.md; 05-BUSINESS-MODEL.md";P0;Da fare;WBS-023;Pagamento e webhook gestiti in sicurezza
+WBS-025;Admin;Implementare console admin e configurazione percentuale globale;"02-REQUIREMENTS.md; 03-ROLES-PERMISSIONS.md";P0;Da fare;"WBS-010; WBS-016; WBS-023";ADMIN modifica percentuale senza deploy
+WBS-026;Audit;Implementare audit log operazioni sensibili;"03-ROLES-PERMISSIONS.md; 04-FUNCTIONAL-MODULES.md";P0;Da fare;WBS-010;Operazioni sensibili tracciate
+WBS-027;Analytics;Implementare statistiche vetrina/offerte/campagne/fidelity;04-FUNCTIONAL-MODULES.md;P1;Da fare;"WBS-012; WBS-014; WBS-019";Metriche principali consultabili
+WBS-028;QA;Test integrazione, sicurezza e concorrenza punti;"02-REQUIREMENTS.md; 06-DATA-MODEL.md; 07-DATABASE-ARCHITECTURE.md";P0;Da fare;"WBS-010; WBS-016; WBS-018; WBS-024";Test end-to-end, anti-duplicazione, arrotondamenti, resi/storni e concorrenza superati
+WBS-029;Deploy;CI/CD, monitoraggio, backup e rilascio MVP;02-REQUIREMENTS.md;P0;Da fare;"WBS-022; WBS-028";Rilascio ripetibile e restore testato
+WBS-030;Dati/QA;Eseguire e validare le migrazioni su PostgreSQL di test;"migrations/README.md; migrations/001_core_identity_business.sql; migrations/002_showcase_offers_campaigns.sql; migrations/003_purchase_loyalty_ledger.sql; migrations/004_qr_notifications_subscriptions.sql; migrations/005_audit_and_indexes.sql";P0;Da fare;WBS-009;"Tutte le migrazioni applicate su database pulito; controllati tabelle, FK, indici, seed e registrazioni in schema_migrations"
+WBS-031;Dati/QA;Implementare test automatici per ledger, idempotenza, concorrenza e riconciliazione;"06-DATA-MODEL.md; 07-DATABASE-ARCHITECTURE.md";P0;Da fare;"WBS-015; WBS-016; WBS-030";Test superati per doppio invio, accredito atomico locale/globale, storni e confronto saldo-ledger
