@@ -47,6 +47,58 @@ def featured_businesses():
     except Exception as exc:
         raise HTTPException(status_code=503, detail="Attività temporaneamente non disponibili.") from exc
 
+@app.get("/api/public/activities-nearby")
+def activities_nearby(lat: float, lon: float, distance: float = 5.0):
+    try:
+        lat_f = float(lat)
+        lon_f = float(lon)
+        dist_f = float(distance)
+    except (TypeError, ValueError):
+        raise HTTPException(status_code=422, detail="Parametri lat/lon/distance non validi.")
+    if not (-90 <= lat_f <= 90 and -180 <= lon_f <= 180):
+        raise HTTPException(status_code=422, detail="Coordinate non valide.")
+    if not (0 < dist_f <= 500):
+        raise HTTPException(status_code=422, detail="Distanza non valida (1-500 km).")
+    try:
+        with get_connection() as conn:
+            items = conn.execute("""
+                SELECT
+                    bpp.business_id AS id,
+                    bpp.public_name,
+                    bpp.category,
+                    bl.city,
+                    COALESCE(bl.address_line, '') AS address,
+                    bpp.description,
+                    bl.latitude,
+                    bl.longitude,
+                    (6371 * acos(
+                        LEAST(1.0, GREATEST(-1.0,
+                            cos(radians(%s)) * cos(radians(bl.latitude))
+                            * cos(radians(bl.longitude) - radians(%s))
+                            + sin(radians(%s)) * sin(radians(bl.latitude))
+                        ))
+                    )) AS distance_km
+                FROM business_location bl
+                JOIN business b ON b.id = bl.business_id AND b.status = 'active'
+                LEFT JOIN business_public_profile bpp ON bpp.business_id = b.id
+                WHERE bl.status = 'active'
+                  AND bl.latitude IS NOT NULL AND bl.longitude IS NOT NULL
+                  AND (6371 * acos(
+                        LEAST(1.0, GREATEST(-1.0,
+                            cos(radians(%s)) * cos(radians(bl.latitude))
+                            * cos(radians(bl.longitude) - radians(%s))
+                            + sin(radians(%s)) * sin(radians(bl.latitude))
+                        ))
+                    )) <= %s
+                ORDER BY distance_km ASC
+                LIMIT 100
+            """, (lat_f, lon_f, lat_f, lat_f, lon_f, lat_f, dist_f)).fetchall()
+        return {"items": items, "lat": lat_f, "lon": lon_f, "distance_km": dist_f}
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail="Ricerca vicinanza temporaneamente non disponibile.") from exc
+
 @app.post("/api/public/contact", status_code=201)
 def contact(payload: ContactRequest):
     if not payload.privacy_consent:

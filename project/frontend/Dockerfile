@@ -3,5 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+# Normalizza CRLF Windows -> LF, altrimenti sh non trova lo script
+RUN sed -i 's/\r$//' ./entrypoint.sh && chmod +x ./entrypoint.sh
 EXPOSE 5173
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+CMD ["/bin/sh", "/app/entrypoint.sh"]

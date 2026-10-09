@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import SearchMap from './pages/SearchMap.jsx';
 
 const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8025';
 
@@ -354,7 +355,7 @@ function Blog() {
   return (
     <>
       <PageIntro
-        eyebrow="Storie e novità"
+        eyebrow="Blog"
         title="Le storie del"
         accent="territorio."
         description="Comunicazioni, racconti e iniziative selezionati dalla redazione della piattaforma."
