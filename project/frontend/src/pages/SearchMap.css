@@ -1,0 +1,62 @@
+.searchmap-page {
+  min-height: 100vh;
+  background: var(--bg-body);
+}
+
+.searchmap-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 991px) {
+  .searchmap-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.searchmap-map-wrapper {
+  position: sticky;
+  top: 88px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #FFFFFF;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(30, 41, 59, 0.06);
+}
+
+.map-legend {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  box-shadow: 0 6px 16px rgba(30, 41, 59, 0.12);
+  pointer-events: none;
+}
+
+.searchmap-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 10px 30px rgba(30, 41, 59, 0.06);
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+@media (max-width: 575px) {
+  .card-body {
+    padding: 1rem;
+  }
+}
