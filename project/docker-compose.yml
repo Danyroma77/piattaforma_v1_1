@@ -21,6 +21,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql://platform:change-me-local@db:5432/platform}
       CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+      MIGRATIONS_DIR: /app/migrations
     ports:
       - "8025:8025"
     depends_on:
@@ -28,6 +29,7 @@ services:
         condition: service_healthy
     volumes:
       - ./backend:/app
+      - ./database/migrations:/app/migrations:ro
 
   frontend:
     build: ./frontend

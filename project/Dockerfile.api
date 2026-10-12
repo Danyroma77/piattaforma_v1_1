@@ -1,0 +1,13 @@
+# Dockerfile per Render (contesto di build = project/).
+# Include sia il backend sia le migrazioni SQL, cosi' `python -m migrate`
+# trova i file anche quando il DB e' esterno (Neon).
+FROM python:3.12-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /app
+COPY backend/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/ ./ 
+COPY database/migrations/ ./database/migrations/
+ENV MIGRATIONS_DIR=/app/database/migrations
+EXPOSE 8025
+CMD ["sh", "-c", "python -m migrate && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8025}"]

@@ -291,7 +291,7 @@ function Businesses() {
           <div className="directory-toolbar">
             <div className="d-flex flex-wrap align-items-center gap-2">
               <h2>Vetrine locali</h2>
-              <p>Una selezione dimostrativa di attività.</p>
+              <p>Le attività della Rete Shopping Marconi.</p>
             </div>
             <div className="search-box">
               <i className="bi bi-search" />
@@ -307,10 +307,23 @@ function Businesses() {
             {filtered.map((b, i) => (
               <div className="col-md-6 col-lg-4" key={b.id}>
                 <article className="directory-card h-100">
-                  <div className={`directory-art art-${i % 3}`}>
-                    <span>{b.category || 'Attività locale'}</span>
-                    <i className={i % 3 === 0 ? 'bi bi-basket2' : i % 3 === 1 ? 'bi bi-flower1' : 'bi bi-stars'} />
-                  </div>
+                  {b.cover_image_url ? (
+                    <div className="directory-cover">
+                      <img
+                        src={b.cover_image_url}
+                        alt={`Vetrina ${b.public_name}`}
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => { e.currentTarget.closest('.directory-cover')?.classList.add('cover-broken'); e.currentTarget.remove(); }}
+                      />
+                      <span className="directory-cover-tag">{b.category || 'Attività locale'}</span>
+                    </div>
+                  ) : (
+                    <div className={`directory-art art-${i % 3}`}>
+                      <span>{b.category || 'Attività locale'}</span>
+                      <i className={i % 3 === 0 ? 'bi bi-basket2' : i % 3 === 1 ? 'bi bi-flower1' : 'bi bi-stars'} />
+                    </div>
+                  )}
                   <div className="card-copy">
                     <small><i className="bi bi-geo-alt" /> {b.city || 'Territorio'}</small>
                     <h3>{b.public_name}</h3>
@@ -322,9 +335,6 @@ function Businesses() {
             ))}
           </div>
           {filtered.length === 0 && <div className="empty-state">Nessuna attività corrisponde alla ricerca. Prova un altro termine.</div>}
-          <p className="demo-note mt-4">
-            <i className="bi bi-info-circle me-2" />Le attività mostrate sono esempi dimostrativi e non rappresentano esercenti reali.
-          </p>
         </div>
       </section>
     </>
@@ -489,10 +499,20 @@ function AuthLayout({ mode }) {
   const register = mode === 'register';
   const [showPassword, setShowPassword] = useState(false);
   const [notice, setNotice] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [profile, setProfile] = useState('utente');
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirm_password: '', terms: false });
+
+  function change(e) {
+    const { name, value, type, checked } = e.target;
+    setForm((f) => ({ ...f, [name]: type === 'checkbox' ? checked : value }));
+  }
 
   function submit(e) {
     e.preventDefault();
-    setNotice(register ? 'La registrazione non è ancora collegata al backend.' : 'L’autenticazione non è ancora collegata al backend.');
+    setBusy(true);
+    setNotice(register ? 'La registrazione non è ancora collegata al backend.' : "L'autenticazione non è ancora collegata al backend.");
+    setBusy(false);
   }
 
   return (

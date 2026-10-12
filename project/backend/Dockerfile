@@ -4,5 +4,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
+# Migrazioni eseguite all'avvio via migrate.py (idempotente).
+# In locale le trova in /app/migrations (volume compose); su Render in /app/database/migrations.
 EXPOSE 8025
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8025", "--reload"]
+CMD ["sh", "-c", "python -m migrate && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8025}"]
+

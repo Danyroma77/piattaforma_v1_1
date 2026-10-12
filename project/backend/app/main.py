@@ -38,7 +38,8 @@ def featured_businesses():
     try:
         with get_connection() as conn:
             items = conn.execute("""
-                SELECT id, public_name, category, city, description
+                SELECT id, public_name, category, city, description,
+                       cover_image_url
                 FROM business_public_profile
                 WHERE featured = TRUE AND status = 'published'
                 ORDER BY featured_order, public_name LIMIT 30

@@ -1,0 +1,32 @@
+services:
+  # API FastAPI — contesto project/ così l'immagine include backend + migration SQL.
+  # Applica le migration all'avvio (sicuro su Neon/Render: idempotente via schema_migrations).
+  - type: web
+    name: piattaforma-api
+    runtime: docker
+    rootDir: project
+    dockerfilePath: ./Dockerfile.api
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: PYTHONUNBUFFERED
+        value: "1"
+
+  # Frontend — static site; VITE_API_BASE_URL va impostata al build.
+  - type: static_site
+    name: piattaforma-web
+    rootDir: project/frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    plan: free
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false
