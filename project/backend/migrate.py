@@ -27,6 +27,7 @@ ORDERED_MIGRATIONS = [
     ("002_marconi_seed", "002_marconi_seed.sql"),
     ("003_publish_marconi", "003_publish_marconi.sql"),
     ("004_business_images", "004_business_images.sql"),
+    ("005_remove_demo_content", "005_remove_demo_content.sql"),
 ]
 
 
@@ -86,42 +87,6 @@ def pending() -> list[tuple[str, Path]]:
             raise SystemExit(2)
         out.append((migration_id, path))
     return out
-
-
-def apply() -> int:
-    items = pending()
-    with _connect() as conn:
-        applied = _applied_ids(conn)
-        todo = [(mid, p) for mid, p in items if mid not in applied]
-        if not todo:
-            print("[migrate] tutto aggiornato.")
-            return 0
-        for migration_id, path in todo:
-            sql = path.read_text(encoding="utf-8")
-            print(f"[migrate] applico {migration_id} ({path.name})...")
-            with conn.cursor() as cur:
-                cur.execute(sql)
-            print(f"[migrate] ok {migration_id}.")
-        print(f"[migrate] applicate {len(todo)} migrazioni.")
-        return 0
-
-
-def check() -> int:
-    with _connect() as conn:
-        applied = _applied_ids(conn)
-        missing = [mid for mid, _ in pending() if mid not in applied]
-        if missing:
-            print(f"[migrate] migrazioni mancanti: {', '.join(missing)}")
-            return 1
-        print("[migrate] tutto aggiornato.")
-        return 0
-
-
-if __name__ == "__main__":
-    if "--check" in sys.argv[1:]:
-        raise SystemExit(check())
-    raise SystemExit(apply())
-
 
 
 def apply() -> int:

@@ -1,0 +1,12 @@
+/* Carousel auto-scorrevole (Come funziona + riusabile per directory/blog). */
+.auto-carousel{position:relative;overflow:hidden;border-radius:20px}
+.auto-carousel-track{display:flex;transition:transform .6s ease;will-change:transform}
+.auto-carousel-slide{flex:0 0 100%;min-width:100%;padding:.25rem}
+.auto-carousel-slide .audience-card{height:100%;margin:0}
+.auto-carousel-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid var(--line,#e5e8e1);background:#fff;display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.12);z-index:2}
+.auto-carousel-prev{left:.6rem}
+.auto-carousel-next{right:.6rem}
+.auto-carousel-dots{display:flex;gap:.5rem;justify-content:center;margin-top:1rem}
+.auto-carousel-dots button{width:10px;height:10px;border-radius:999px;border:0;background:#cdd6cb;padding:0}
+.auto-carousel-dots button.active{background:var(--forest,#203c32);width:28px}
+@media (prefers-reduced-motion: reduce){.auto-carousel-track{transition:none}}

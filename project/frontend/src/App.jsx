@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import AutoCarousel from './components/AutoCarousel.jsx';
 import SearchMap from './pages/SearchMap.jsx';
 
 const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8025';
@@ -205,6 +206,49 @@ function Home() {
 }
 
 function HowItWorks() {
+  const cards = [
+    {
+      key: 'utenti',
+      content: (
+        <article className="audience-card">
+          <div className="audience-icon"><i className="bi bi-person-heart" /></div>
+          <span className="eyebrow">Per gli utenti</span>
+          <h2>Scopri i luoghi<br />che fanno per te.</h2>
+          <p>Puoi consultare le vetrine pubbliche senza registrarti. Creando un account avrai accesso alle funzioni riservate e potrai gestire la tua esperienza personale.</p>
+          <ul>
+            <li>Esplora negozi, servizi e sedi.</li>
+            <li>Consulta offerte e iniziative pubblicate.</li>
+            <li>Accedi ai programmi fidelity disponibili.</li>
+            <li>Ricevi comunicazioni secondo le preferenze previste.</li>
+          </ul>
+          <Link className="btn btn-primary rounded-pill px-4" to="/registrati">
+            Registrati come utente
+          </Link>
+        </article>
+      ),
+    },
+    {
+      key: 'negozianti',
+      content: (
+        <article className="audience-card audience-dark">
+          <div className="audience-icon"><i className="bi bi-shop-window" /></div>
+          <span className="eyebrow">Per negozianti e attività</span>
+          <h2>Il tuo negozio,<br />raccontato meglio.</h2>
+          <p>Il referente autorizzato avrà uno spazio per gestire la presenza digitale dell'attività e le sedi collegate.</p>
+          <ul>
+            <li>Presenta la tua attività e i tuoi servizi.</li>
+            <li>Gestisci più sedi da un unico profilo autorizzato.</li>
+            <li>Pubblica offerte, campagne e aggiornamenti.</li>
+            <li>Gestisci le operazioni fidelity abilitate.</li>
+          </ul>
+          <Link className="btn btn-light rounded-pill px-4" to="/registrati?profilo=negoziante">
+            Registra un'attività
+          </Link>
+        </article>
+      ),
+    },
+  ];
+
   return (
     <>
       <PageIntro
@@ -215,42 +259,7 @@ function HowItWorks() {
       />
       <section className="section-space">
         <div className="container">
-          <div className="row g-4">
-            <div className="col-lg-6">
-              <article className="audience-card">
-                <div className="audience-icon"><i className="bi bi-person-heart" /></div>
-                <span className="eyebrow">Per gli utenti</span>
-                <h2>Scopri i luoghi<br />che fanno per te.</h2>
-                <p>Puoi consultare le vetrine pubbliche senza registrarti. Creando un account avrai accesso alle funzioni riservate e potrai gestire la tua esperienza personale.</p>
-                <ul>
-                  <li>Esplora negozi, servizi e sedi.</li>
-                  <li>Consulta offerte e iniziative pubblicate.</li>
-                  <li>Accedi ai programmi fidelity disponibili.</li>
-                  <li>Ricevi comunicazioni secondo le preferenze previste.</li>
-                </ul>
-                <Link className="btn btn-primary rounded-pill px-4" to="/registrati">
-                  Registrati come utente
-                </Link>
-              </article>
-            </div>
-            <div className="col-lg-6">
-              <article className="audience-card audience-dark">
-                <div className="audience-icon"><i className="bi bi-shop-window" /></div>
-                <span className="eyebrow">Per negozianti e attività</span>
-                <h2>Il tuo negozio,<br />raccontato meglio.</h2>
-                <p>Il referente autorizzato avrà uno spazio per gestire la presenza digitale dell'attività e le sedi collegate.</p>
-                <ul>
-                  <li>Presenta la tua attività e i tuoi servizi.</li>
-                  <li>Gestisci più sedi da un unico profilo autorizzato.</li>
-                  <li>Pubblica offerte, campagne e aggiornamenti.</li>
-                  <li>Gestisci le operazioni fidelity abilitate.</li>
-                </ul>
-                <Link className="btn btn-light rounded-pill px-4" to="/registrati?profilo=negoziante">
-                  Registra un'attività
-                </Link>
-              </article>
-            </div>
-          </div>
+          <AutoCarousel items={cards} interval={6000} ariaLabel="Come funziona: panoramica per utenti e attività" />
         </div>
       </section>
     </>
@@ -268,12 +277,7 @@ function Businesses() {
       .catch(() => {});
   }, []);
 
-  const demo = [
-    { id: 'a', public_name: 'La Bottega del Quartiere', category: 'Alimentari', city: 'Centro', description: 'Prodotti scelti e attenzione alle persone.' },
-  ];
-
-  const all = items.length ? items : demo;
-  const filtered = all.filter(
+  const filtered = items.filter(
     (x) =>
       `${x.public_name} ${x.category || ''} ${x.city || ''}`.toLowerCase().includes(query.toLowerCase())
   );
@@ -334,7 +338,13 @@ function Businesses() {
               </div>
             ))}
           </div>
-          {filtered.length === 0 && <div className="empty-state">Nessuna attività corrisponde alla ricerca. Prova un altro termine.</div>}
+          {filtered.length === 0 && (
+            <div className="empty-state">
+              {items.length === 0
+                ? 'Nessuna vetrina pubblicata al momento. Torna a trovarci presto.'
+                : 'Nessuna attività corrisponde alla ricerca. Prova un altro termine.'}
+            </div>
+          )}
         </div>
       </section>
     </>
@@ -346,18 +356,13 @@ function Blog() {
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    fetch(`${API}/api/public/blog`)
+    fetch(`${API}/api/public/posts`)
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((d) => setPosts(d.items || []))
       .catch(() => {});
   }, []);
 
-  const demo = [
-    { id: '1', title: 'Una vetrina digitale', excerpt: 'Raccontare la propria attività, condividere novità e creare relazioni con le persone del territorio.', body: 'Contenuto dimostrativo di prova.', category: 'Vetrina', published_at: new Date().toISOString() },
-  ];
-
-  const all = posts.length ? posts : demo;
-  const filtered = all.filter(
+  const filtered = posts.filter(
     (p) =>
       `${p.title} ${p.excerpt} ${p.category || ''}`.toLowerCase().includes(query.toLowerCase())
   );
@@ -391,11 +396,17 @@ function Blog() {
                   <small>{p.published_at ? new Date(p.published_at).toLocaleDateString('it-IT') : 'DAL BLOG'}</small>
                   <h3>{p.title}</h3>
                   <p>{p.excerpt || p.body || 'Leggi le ultime notizie e storie della community.'}</p>
-                  <span className="coming-soon">Articolo dimostrativo</span>
                 </div>
               </article>
             ))}
           </div>
+          {filtered.length === 0 && (
+            <div className="empty-state mt-4">
+              {posts.length === 0
+                ? 'Nessun articolo pubblicato al momento. Torna a trovarci presto.'
+                : 'Nessun articolo corrisponde alla ricerca. Prova un altro termine.'}
+            </div>
+          )}
         </div>
       </section>
     </>
