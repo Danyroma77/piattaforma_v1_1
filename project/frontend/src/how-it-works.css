@@ -1,0 +1,27 @@
+/* Pagina "Come funziona": passi, FAQ e invito finale. */
+.hiw-heading{max-width:680px;margin:0 auto 3rem;text-align:center}
+.hiw-heading h2{font-size:clamp(2rem,4vw,3.2rem);line-height:1.08;font-weight:850;letter-spacing:-.06em;color:var(--forest-deep);margin:0 0 1rem}
+.hiw-heading h2 span{color:#7b9662}
+.hiw-heading p{max-width:600px;margin:0 auto;color:var(--muted);line-height:1.8}
+.hiw-heading .eyebrow{justify-content:center}
+
+.steps-panel h3{display:flex;align-items:center}
+.steps-panel h3 i{color:var(--forest);margin-right:.35rem}
+
+.faq-accordion{max-width:820px;margin:0 auto}
+.faq-accordion .accordion-item{border:1px solid var(--line);border-radius:16px;margin-bottom:.85rem;background:#fff;overflow:hidden}
+.faq-accordion .accordion-button{font-weight:750;font-size:1rem;color:var(--forest-deep);background:#fff;box-shadow:none;padding:1.1rem 1.3rem}
+.faq-accordion .accordion-button:not(.collapsed){color:var(--forest);background:#f4f7f0}
+.faq-accordion .accordion-button:focus{z-index:3;border-color:var(--line);box-shadow:0 0 0 .2rem rgba(32,60,50,.12)}
+.faq-accordion .accordion-button::after{background-image:none;content:"\F282";font-family:"bootstrap-icons";display:inline-grid;place-items:center;transition:transform .2s ease}
+.faq-accordion .accordion-button:not(.collapsed)::after{transform:rotate(180deg)}
+.faq-accordion .accordion-body{color:var(--muted);line-height:1.8;padding-top:.2rem}
+
+.how-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.8rem;padding:3rem 3.2rem;background:var(--forest);color:#fff;border-radius:28px}
+.how-cta h2{font-size:clamp(1.8rem,3.2vw,2.6rem);font-weight:850;letter-spacing:-.05em;line-height:1.05;margin:.3rem 0 .8rem}
+.how-cta p{color:#cfd8cf;line-height:1.7;max-width:520px;margin:0}
+.how-cta .eyebrow{color:#a7c48b}
+.how-cta .eyebrow-dot{background:#a7c48b;box-shadow:0 0 0 5px #a7c48b25}
+.how-cta-actions{display:flex;flex-wrap:wrap;gap:.8rem}
+.how-cta .btn{border-radius:999px;padding:.72rem 1.6rem;font-weight:700}
+@media(max-width:767px){.how-cta{padding:2.2rem 1.6rem}.how-cta-actions{width:100%}.how-cta-actions .btn{width:100%}}

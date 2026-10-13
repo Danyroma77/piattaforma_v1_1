@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import AutoCarousel from './components/AutoCarousel.jsx';
 import SearchMap from './pages/SearchMap.jsx';
@@ -249,6 +249,19 @@ function HowItWorks() {
     },
   ];
 
+  const steps = [
+    { n: "01", icon: "bi-search", title: "Scopri il territorio", desc: "Consulta le vetrine pubbliche, le offerte e le iniziative delle attività vicine a te, senza bisogno di registrarti." },
+    { n: "02", icon: "bi-person-plus", title: "Crea il tuo account", desc: "Registrati gratuitamente per seguire le attività che preferisci e ricevere le novità che ti interessano." },
+    { n: "03", icon: "bi-bell", title: "Resta aggiornato", desc: "Segui i tuoi negozi preferiti, partecipa alle iniziative e accedi ai programmi fedeltà disponibili." },
+  ];
+
+  const faqs = [
+    { q: "Devo registrarmi per consultare le vetrine?", a: "No. Puoi esplorare liberamente le vetrine pubbliche, le offerte e le iniziative pubblicate. La registrazione ti permette di seguire le attività, salvare i preferiti e accedere alle funzioni riservate." },
+    { q: "Che differenza c'è tra account utente e account attività?", a: "L'account utente è pensato per chi vuole scoprire il territorio e seguire le attività. L'account attività è dedicato ai negozianti e permette di gestire la presenza digitale, le sedi, le offerte e i programmi fedeltà." },
+    { q: "Come faccio a far conoscere la mia attività?", a: "Registra un'attività dal percorso dedicato: un referente autorizzato potrà creare la vetrina, aggiungere le sedi collegate e pubblicare contenuti, offerte e campagne." },
+    { q: "La piattaforma è gratuita?", a: "La consultazione delle vetrine e la creazione di un account utente sono gratuite. Per le funzionalità avanzate dedicate alle attività, contattaci per valutare insieme le opzioni disponibili." },
+  ];
+
   return (
     <>
       <PageIntro
@@ -257,9 +270,82 @@ function HowItWorks() {
         accent="due prospettive."
         description="Un'esperienza pensata per chi vuole scoprire le attività del territorio e per chi desidera far conoscere il proprio negozio."
       />
-      <section className="section-space">
+      <section className="section-space pt-0">
+        <div className="container">
+          <div className="hiw-heading">
+            <span className="eyebrow"><span className="eyebrow-dot" /> Come funziona</span>
+            <h2>Tre passi per <span>iniziare.</span></h2>
+            <p>Dalla scoperta del territorio fino alle tue attività preferite: ecco come muoverti sulla piattaforma.</p>
+          </div>
+          <div className="steps-panel mt-4">
+            {steps.map((s, i) => (
+              <Fragment key={s.n}>
+                <div>
+                  <span>{s.n}</span>
+                  <h3><i className={`bi ${s.icon}`} />{s.title}</h3>
+                  <p>{s.desc}</p>
+                </div>
+                {i < steps.length - 1 && <i className="bi bi-arrow-right" aria-hidden="true" />}
+              </Fragment>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-space pt-0">
         <div className="container">
           <AutoCarousel items={cards} interval={6000} ariaLabel="Come funziona: panoramica per utenti e attività" />
+        </div>
+      </section>
+
+      <section className="section-space pt-0">
+        <div className="container">
+          <div className="hiw-heading">
+            <span className="eyebrow"><span className="eyebrow-dot" /> Domande frequenti</span>
+            <h2>Hai qualche <span>dubbio?</span></h2>
+            <p>Le risposte alle domande più comuni su come funziona la piattaforma.</p>
+          </div>
+          <div className="accordion faq-accordion mt-4" id="howFaq">
+            {faqs.map((f, i) => (
+              <div className="accordion-item" key={f.q}>
+                <h3 className="accordion-header">
+                  <button
+                    className="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target={`#howFaq-${i}`}
+                    aria-expanded="false"
+                    aria-controls={`howFaq-${i}`}
+                  >
+                    {f.q}
+                  </button>
+                </h3>
+                <div id={`howFaq-${i}`} className="accordion-collapse collapse" data-bs-parent="#howFaq">
+                  <div className="accordion-body">{f.a}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-space pt-0">
+        <div className="container">
+          <div className="how-cta">
+            <div>
+              <span className="eyebrow"><span className="eyebrow-dot" /> Pronto a iniziare?</span>
+              <h2>Dai vita alla tua <br />presenza digitale.</h2>
+              <p>Che tu voglia scoprire il territorio o far conoscere la tua attività, creare un account è il primo passo.</p>
+            </div>
+            <div className="how-cta-actions">
+              <Link className="btn btn-light rounded-pill px-4" to="/registrati">
+                Registrati come utente <i className="bi bi-arrow-up-right ms-2" />
+              </Link>
+              <Link className="btn btn-outline-light rounded-pill px-4" to="/registrati?profilo=negoziante">
+                Registra un'attività
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </>
@@ -269,18 +355,44 @@ function HowItWorks() {
 function Businesses() {
   const [items, setItems] = useState([]);
   const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('');
+  const [city, setCity] = useState('');
 
   useEffect(() => {
-    fetch(`${API}/api/public/featured-businesses`)
+    fetch(`${API}/api/public/businesses`)
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((d) => setItems(d.items || []))
       .catch(() => {});
   }, []);
 
-  const filtered = items.filter(
-    (x) =>
-      `${x.public_name} ${x.category || ''} ${x.city || ''}`.toLowerCase().includes(query.toLowerCase())
-  );
+  const categories = useMemo(() => {
+    const set = new Set();
+    items.forEach((b) => b.category && set.add(b.category));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [items]);
+
+  const cities = useMemo(() => {
+    const set = new Set();
+    items.forEach((b) => b.city && set.add(b.city));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [items]);
+
+  const filtered = items.filter((x) => {
+    const matchesQuery = `${x.public_name} ${x.category || ''} ${x.city || ''} ${x.description || ''}`
+      .toLowerCase()
+      .includes(query.toLowerCase());
+    const matchesCategory = !category || x.category === category;
+    const matchesCity = !city || x.city === city;
+    return matchesQuery && matchesCategory && matchesCity;
+  });
+
+  const hasFilters = query || category || city;
+
+  const resetFilters = () => {
+    setQuery('');
+    setCategory('');
+    setCity('');
+  };
 
   return (
     <>
@@ -307,6 +419,50 @@ function Businesses() {
               />
             </div>
           </div>
+
+          <div className="directory-filters">
+            <div className="filter-field">
+              <label className="form-label" htmlFor="filter-category">Categoria</label>
+              <select
+                id="filter-category"
+                className="form-select"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">Tutte le categorie</option>
+                {categories.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+            <div className="filter-field">
+              <label className="form-label" htmlFor="filter-city">Città</label>
+              <select
+                id="filter-city"
+                className="form-select"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              >
+                <option value="">Tutte le città</option>
+                {cities.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+            {hasFilters && (
+              <div className="filter-field filter-reset-field">
+                <button type="button" className="btn btn-sm btn-outline-secondary" onClick={resetFilters}>
+                  <i className="bi bi-x-lg me-1" />Azzera filtri
+                </button>
+              </div>
+            )}
+          </div>
+
+          <p className="directory-count">
+            {filtered.length} {filtered.length === 1 ? 'attività trovata' : 'attività trovate'}
+            {hasFilters ? ` su ${items.length}` : ''}
+          </p>
+
           <div className="row g-4 mt-2">
             {filtered.map((b, i) => (
               <div className="col-md-6 col-lg-4" key={b.id}>
@@ -341,8 +497,8 @@ function Businesses() {
           {filtered.length === 0 && (
             <div className="empty-state">
               {items.length === 0
-                ? 'Nessuna vetrina pubblicata al momento. Torna a trovarci presto.'
-                : 'Nessuna attività corrisponde alla ricerca. Prova un altro termine.'}
+                ? 'Nessuna vetrina disponibile al momento. Torna a trovarci presto.'
+                : 'Nessuna attività corrisponde ai filtri selezionati. Prova a modificare la ricerca.'}
             </div>
           )}
         </div>

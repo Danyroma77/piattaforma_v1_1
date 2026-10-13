@@ -1,0 +1,15 @@
+/* Barra filtri directory /negozi.
+   Completa gli stili già presenti in styles.css (directory-toolbar, search-box). */
+.directory-toolbar h2{font-size:1.5rem;font-weight:850;letter-spacing:-.03em;margin:0;color:var(--forest-deep)}
+.directory-toolbar p{margin:0;color:var(--muted);font-size:.95rem}
+.search-box i{color:var(--muted)}
+.search-box input{border:0;background:transparent;outline:none;width:100%;font-size:.95rem;color:var(--ink)}
+
+.directory-filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:1.25rem;padding:1rem 1.2rem;background:var(--white);border:1px solid var(--line);border-radius:16px;margin-bottom:.75rem}
+.directory-filters .filter-field{display:flex;flex-direction:column;gap:.35rem;min-width:180px}
+.directory-filters .form-label{margin:0;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.directory-filters .form-select{border-radius:12px;border:1px solid var(--line);background:var(--cream);color:var(--ink);font-size:.92rem;padding:.5rem .75rem}
+.directory-filters .form-select:focus{border-color:var(--forest);box-shadow:0 0 0 .2rem rgba(32,60,50,.12)}
+.filter-reset-field{align-self:flex-end}
+
+.directory-count{margin:0 0 1rem;color:var(--muted);font-size:.9rem;font-weight:600}

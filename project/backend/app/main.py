@@ -48,6 +48,30 @@ def featured_businesses():
     except Exception as exc:
         raise HTTPException(status_code=503, detail="Attività temporaneamente non disponibili.") from exc
 
+@app.get("/api/public/businesses")
+def businesses():
+    """Elenco completo delle attività con stato, per la directory /negozi.
+
+    Restituisce tutte le vetrine (pubblicate, in bozza e in archivio/nascoste)
+    con il relativo stato, così il frontend può mostrarle e filtrarle.
+    """
+    try:
+        with get_connection() as conn:
+            items = conn.execute("""
+                SELECT id, public_name, category, city, description,
+                       cover_image_url, status, featured
+                FROM business_public_profile
+                ORDER BY
+                    CASE status WHEN 'published' THEN 0 WHEN 'draft' THEN 1 ELSE 2 END,
+                    featured DESC,
+                    featured_order,
+                    public_name
+                LIMIT 300
+            """).fetchall()
+        return {"items": items}
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail="Attività temporaneamente non disponibili.") from exc
+
 @app.get("/api/public/activities-nearby")
 def activities_nearby(lat: float, lon: float, distance: float = 5.0):
     try:

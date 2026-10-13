@@ -6,6 +6,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import './styles.css'
 import './directory-cover.css'
+import './directory-filters.css'
+import './how-it-works.css'
 import './carousel.css'
 import App from './App.jsx'
 

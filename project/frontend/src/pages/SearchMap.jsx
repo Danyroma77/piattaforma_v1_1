@@ -296,12 +296,6 @@ export default function SearchMap() {
                   )}
                 </div>
               </div>
-
-              <div className="mt-3">
-                <Link to="/" className="btn btn-outline-secondary w-100">
-                  <i className="bi bi-arrow-left me-2" /> Torna alla home
-                </Link>
-              </div>
             </div>
           </div>
         </div>
