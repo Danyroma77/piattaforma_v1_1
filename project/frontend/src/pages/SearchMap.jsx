@@ -5,7 +5,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './SearchMap.css';
 
-const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8025';
+const API = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8025').replace(/\/+$/, '');
 
 const defaultIcon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',

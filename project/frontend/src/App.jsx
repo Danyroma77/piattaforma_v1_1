@@ -3,7 +3,7 @@ import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import AutoCarousel from './components/AutoCarousel.jsx';
 import SearchMap from './pages/SearchMap.jsx';
 
-const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8025';
+const API = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8025').replace(/\/+$/, '');
 
 function Header() {
   const location = useLocation();

@@ -5,7 +5,8 @@ from pydantic import BaseModel, EmailStr, Field
 from .db import get_connection
 
 app = FastAPI(title="Platform API", version="0.2.0")
-origins = [x.strip() for x in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",") if x.strip()]
+_cors_env = os.getenv("CORS_ORIGINS") or os.getenv("CORS_ORIGIN") or "http://localhost:5173"
+origins = [x.strip() for x in _cors_env.split(",") if x.strip()]
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True,
                    allow_methods=["GET", "POST", "OPTIONS"], allow_headers=["*"])
 
